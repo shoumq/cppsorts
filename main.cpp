@@ -1,110 +1,97 @@
 #include <iostream>
+#include <string>
+#include <list>
 #include <vector>
-#include <algorithm>
-#include <ctime>
+#include <utility>
+#include "Node.h"
 
-class Domino {
-public:
-    int side1;
-    int side2;
+using namespace std;
 
-    Domino(int s1, int s2) : side1(s1), side2(s2) {}
+// сортировка вставками
+void insertionSort(vector<int> &arr) {
+    for (int i = 1; i < arr.size(); i++) {
+        int key = arr[i];
+        int j = i - 1;
 
-    void display() const {
-        std::cout << "[" << side1 << "|" << side2 << "]";
-    }
-};
-
-class Player {
-public:
-    std::vector<Domino> hand;
-
-    void draw(const Domino& domino) {
-        hand.push_back(domino);
-    }
-
-    void displayHand() const {
-        for (const auto& domino : hand) {
-            domino.display();
-            std::cout << " ";
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
         }
-        std::cout << std::endl;
+
+        arr[j + 1] = key;
     }
-};
+}
 
-class Game {
-private:
-    std::vector<Domino> stock;
-    std::vector<Domino> board;
-    Player player1, player2;
-    int currentPlayer;
-
-public:
-    Game() : currentPlayer(1) {
-        // Инициализация домино
-        for (int i = 0; i <= 6; ++i) {
-            for (int j = i; j <= 6; ++j) {
-                stock.emplace_back(i, j);
+// сортировка пузырьком
+void bubbleSort(vector<int> &arr) {
+    for (int i = 0; i < arr.size(); i++) {
+        for (int j = 0; j < arr.size(); j++) {
+            if (arr[j] > arr[j + 1]) {
+                swap(arr[j], arr[j + 1]);
             }
         }
-        std::srand(static_cast<unsigned int>(std::time(nullptr)));
-        std::random_shuffle(stock.begin(), stock.end());
-
-        // Раздача по 7 плиток каждому игроку
-        for (int i = 0; i < 7; ++i) {
-            player1.draw(stock.back());
-            stock.pop_back();
-            player2.draw(stock.back());
-            stock.pop_back();
-        }
     }
+}
 
-    void displayStatus() {
-        std::cout << "Игрок 1: ";
-        player1.displayHand();
-        std::cout << "Игрок 2: ";
-        player2.displayHand();
-        std::cout << "На доске: ";
-        for (const auto& domino : board) {
-            domino.display();
-            std::cout << " ";
-        }
-        std::cout << std::endl;
-    }
-
-    void play() {
-        while (true) {
-            displayStatus();
-            Player& current = (currentPlayer == 1) ? player1 : player2;
-
-            if (current.hand.empty()) {
-                std::cout << "Игрок " << currentPlayer << " выиграл!" << std::endl;
-                break;
+// сортировка выбором
+void selectionSort(vector<int> &arr) {
+    for (int i = 0; i < arr.size() - 1; i++) {
+        int min = i;
+        for (int j = i + 1; j < arr.size(); j++) {
+            if (arr[j] < arr[min]) {
+                min = j;
             }
+        }
 
-            // Простой ввод для выбора плитки
-            std::cout << "Игрок " << currentPlayer << ", выберите плитку (0-" << current.hand.size() - 1 << "): ";
-            int choice;
-            std::cin >> choice;
+        int temp = arr[min];
+        arr[min] = arr[i];
+        arr[i] = temp;
+    }
+}
 
-            if (choice < 0 || choice >= current.hand.size()) {
-                std::cout << "Неверный выбор. Попробуйте снова." << std::endl;
-                continue;
+void shellSort(vector<int>& a) {
+    int n = a.size();
+    int step, temp;
+    for (step = n / 2; step > 0; step /= 2) {
+        for (int i = step; i < n; i++)
+        {
+            temp = a[i];
+            int j;
+            for (j = i; j >= step && a[j - step] > temp; j -= step)
+            {
+                a[j] = a[j - step];
             }
-
-            // Добавление плитки на доску
-            Domino chosen = current.hand[choice];
-            current.hand.erase(current.hand.begin() + choice);
-            board.push_back(chosen);
-
-            // Смена игрока
-            currentPlayer = (currentPlayer == 1) ? 2 : 1;
+            a[j] = temp;
         }
     }
-};
+}
+
 
 int main() {
-    Game game;
-    game.play();
+    // vector<int> arr = {5, 2, 6, 2, 4, 3, 9, 1, 0, 7, 8, 3};
+    // shellSort(arr);
+    // for (int i = 0; i < arr.size(); i++) {
+    //     cout << arr[i] << " ";
+    // }
+
+    Tree tree;
+    Tree::Node* root = nullptr;
+
+    root = tree.insert(root, 50);
+    root = tree.insert(root, 30);
+    root = tree.insert(root, 20);
+    root = tree.insert(root, 40);
+    root = tree.insert(root, 70);
+    root = tree.insert(root, 60);
+    root = tree.insert(root, 80);
+
+    vector<int> sortedKeys = tree.sort(root);
+
+    cout << "Sorted keys: ";
+    for (int key : sortedKeys) {
+        std::cout << key << " ";
+    }
+    cout << std::endl;
+
     return 0;
 }

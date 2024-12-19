@@ -3,4 +3,6 @@ project(domino)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(domino main.cpp)
+add_executable(domino main.cpp
+        Node.cpp
+        Node.h)

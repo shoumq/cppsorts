@@ -1,3 +1,0 @@
-D:/Coding/cpp/domino/cmake-build-debug/CMakeFiles/domino.dir
-D:/Coding/cpp/domino/cmake-build-debug/CMakeFiles/edit_cache.dir
-D:/Coding/cpp/domino/cmake-build-debug/CMakeFiles/rebuild_cache.dir
